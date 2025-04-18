@@ -56,3 +56,15 @@ Matrix4x4 MakeRotateZMatrix(float radian) {
 	result.m[1][1] = std::cos(radian);
 	return result;
 }
+
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
+	Matrix4x4 result = MakeIdentity4x4();
+	Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
+	Matrix4x4 rotateXMatrix = MakeRotateXMatrix(rotate.x);
+	Matrix4x4 rotateYMatrix = MakeRotateYMatrix(rotate.y);
+	Matrix4x4 rotateZMatrix = MakeRotateZMatrix(rotate.z);
+	Matrix4x4 rotateXYZMatrix = Multiply(rotateXMatrix, Multiply(rotateYMatrix, rotateZMatrix));
+	Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);
+	result = Multiply(translateMatrix, Multiply(scaleMatrix, rotateXYZMatrix));
+	return result;
+}

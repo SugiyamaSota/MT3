@@ -34,3 +34,12 @@ Matrix4x4 MakeRotateYMatrix(float radian);
 
 //Y軸回転行列
 Matrix4x4 MakeRotateZMatrix(float radian);
+
+/// <summary>
+/// 合成された行列の作成
+/// </summary>
+/// <param name="scale">拡縮の大きさ</param>
+/// <param name="rotate">回転量</param>
+/// <param name="translate">移動量</param>
+/// <returns></returns>
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
