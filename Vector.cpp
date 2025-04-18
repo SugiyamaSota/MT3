@@ -58,7 +58,7 @@ Vector3 Normalize(const Vector3& vector) {
 
 void  VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
-	Novice::ScreenPrintf(x + kColumnWidth, y, "%.02f", vector.y);
-	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%.02f", vector.z);
-	Novice::ScreenPrintf(x + kColumnWidth * 3, y, "%s", label);
+	Novice::ScreenPrintf(x + kVectorColumnWidth, y, "%.02f", vector.y);
+	Novice::ScreenPrintf(x + kVectorColumnWidth * 2, y, "%.02f", vector.z);
+	Novice::ScreenPrintf(x + kVectorColumnWidth * 3, y, "%s", label);
 }
