@@ -2,6 +2,7 @@
 #include"Vector.h"
 #include"Matrix.h"
 #include<assert.h>
+#include<cmath>
 
 /// <summary>
 /// 平行移動行列
@@ -24,3 +25,12 @@ Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 /// <param name="matrix">変換する大きさ</param>
 /// <returns>変換後の座標</returns>
 Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
+
+//x軸回転行列
+Matrix4x4 MakeRotateXMatrix(float radian);
+
+//Y軸回転行列
+Matrix4x4 MakeRotateYMatrix(float radian);
+
+//Y軸回転行列
+Matrix4x4 MakeRotateZMatrix(float radian);
