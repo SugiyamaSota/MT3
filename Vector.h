@@ -23,6 +23,9 @@ float Length(const Vector3& vector);
 //正規化
 Vector3 Normalize(const Vector3& vector);
 
+//クロス積
+Vector3 Cross(const Vector3& vector1, const Vector3& vector2);
+
 //===表示関数===//
 static const int kVectorColumnWidth = 60;
 
