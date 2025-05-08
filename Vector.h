@@ -1,8 +1,6 @@
 ﻿#pragma once
+#include"Struct.h"
 
-struct Vector3 {
-	float x, y, z;
-};
 
 //===計算関数===//
 //加算
