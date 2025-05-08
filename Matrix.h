@@ -1,8 +1,5 @@
 ﻿#pragma once
-
-struct Matrix4x4 {
-	float m[4][4];
-};
+#include"Struct.h"
 
 //===計算関数===//
 //行列の加法
