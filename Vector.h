@@ -21,6 +21,10 @@ float Length(const Vector3& vector);
 //正規化
 Vector3 Normalize(const Vector3& vector);
 
+Vector3 Project(const Vector3& v1, Vector3& v2);
+
+Vector3 ClosetPoint(const Vector3& point,Segment& segment);
+
 //===表示関数===//
 static const int kVectorColumnWidth = 60;
 
