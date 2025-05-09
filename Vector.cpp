@@ -56,6 +56,18 @@ Vector3 Normalize(const Vector3& vector) {
 	return result;
 }
 
+Vector3 Project(const Vector3& v1, Vector3& v2) {
+	Vector3 result = {};
+	result = Multiply(Dot(v1, Normalize(v2)), Normalize(v2));
+	return result;
+}
+
+Vector3 ClosetPoint(const Vector3& point,  Segment& segment) {
+	Vector3 result = {};
+	result = Add(segment.origin, Project(Subtract(point, segment.origin), segment.diff));
+	return result;
+}
+
 void  VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
 	Novice::ScreenPrintf(x + kVectorColumnWidth, y, "%.02f", vector.y);
