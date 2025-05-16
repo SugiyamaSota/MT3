@@ -109,7 +109,7 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="C:\KamataEngine\Adapter\Novice.cpp" />
-    <ClCompile Include="Convert.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Draw.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
@@ -143,8 +143,9 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClInclude Include="C:\KamataEngine\DirectXGame\input\Input.h" />
     <ClInclude Include="C:\KamataEngine\DirectXGame\scene\GameScene.h" />
     <ClInclude Include="C:\KamataEngine\Adapter\Novice.h" />
-    <ClInclude Include="Convert.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Draw.h" />
+    <ClInclude Include="HeaderReader.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Struct.h" />
     <ClInclude Include="Vector.h" />

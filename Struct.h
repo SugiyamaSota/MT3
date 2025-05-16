@@ -10,6 +10,7 @@ struct Vector3 {
 	float x, y, z;
 };
 
+//球
 struct Sphere {
 	Vector3 center;
 	float radius;
