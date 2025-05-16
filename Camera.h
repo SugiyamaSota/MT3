@@ -28,9 +28,6 @@ private:
 	//拡縮後の行列
 	Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 
-	//座標変換
-	Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
-
 	//x軸回転行列
 	Matrix4x4 MakeRotateXMatrix(float radian);
 
@@ -55,10 +52,17 @@ private:
 public:
 	Vector3 Conversion(const Vector3& v);
 
+	//座標変換
+	Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
+
 	//初期化
 	void Initialize(const int kWindowWidth, const int kWindowHeight);
 
 	//更新処理
 	void Update();
+
+	Matrix4x4 GetViewProjectionMatrix() { return viewProjectionMatrix_; }
+	Matrix4x4 GetViewportMatrix() { return viewportMatrix_; }
+
 };
 
