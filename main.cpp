@@ -5,20 +5,12 @@
 #include"Matrix.h"
 #include"Vector.h"
 #include"Struct.h"
+#include"Function.h"
 
 const char kWindowTitle[] = "LC1B_13_スギヤマソウタ_タイトル";
 
 const int kWindowWidth = 1280;
 const int kWindowHeight = 720;
-
-bool isCollision(Sphere& s1, Sphere& s2) {
-	float distance = Length(Subtract(s1.center, s2.center));
-	if (distance <= s1.radius + s2.radius) {
-		return true;
-	} else {
-		return false;
-	}
-}
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -35,12 +27,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		1.0f,
 	};
 
-	Sphere sphere2 = {
-		{1.0f,1.0f,1.0f},
+	Plane plane = {
+		{0.0f,1.0f,0.0f},
 		1.0f,
 	};
-	
-	int color = BLACK;
+
+	int sphereColor = BLACK;
+	int planeColor = BLACK;
 
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
@@ -58,14 +51,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓更新処理ここから
 		///
-		
+
 		//カメラの更新
 		camera->Update();
+		ImGui::Begin("sphere");
+		ImGui::DragFloat3("spherePosition", &sphere.center.x, 0.01f);
+		ImGui::DragFloat3("planeNormal", &plane.normal.x, 0.01f);
+		ImGui::DragFloat("planeDistance", &plane.distance, 0.01f);
+		ImGui::End();
+		plane.normal = Normalize(plane.normal);
 
-		if (isCollision(sphere, sphere2) == true) {
-			color = RED;
+		if (isCollision(sphere, plane) == true) {
+			sphereColor = RED;
 		} else {
-			color = BLACK;
+			sphereColor = BLACK;
 		}
 		///
 		/// ↑更新処理ここまで
@@ -74,13 +73,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
-		ImGui::Begin("sphere");
-		ImGui::DragFloat3("position", &sphere.center.x, 0.01f);
-		ImGui::End();
+		
 
 		DrawGrid(camera);
-		DrawSphere(sphere, camera, color);
-		DrawSphere(sphere2, camera, color);
+		DrawSphere(sphere, camera, sphereColor);
+		DrawPlane(plane, camera, planeColor);
 
 		///
 		/// ↑描画処理ここまで

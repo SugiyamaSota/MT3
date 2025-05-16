@@ -33,3 +33,9 @@ struct Segment {
 	Vector3 origin;
 	Vector3 diff;
 };
+
+//平面
+struct Plane {
+	Vector3 normal;
+	float distance;
+};
