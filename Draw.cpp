@@ -113,3 +113,13 @@ void DrawPlane(const Plane& plane, Camera* camera, int color) {
 	Novice::DrawLine(int(points[2].x), int(points[2].y), int(points[1].x), int(points[1].y), color);
 	Novice::DrawLine(int(points[3].x), int(points[3].y), int(points[0].x), int(points[0].y), color);
 }
+
+void DrawTriangle(const Triangle& triangle, Camera* camera, int color) {
+	Vector3 screenVertices[3];
+	for (int i = 0; i < 3; i++) {
+		screenVertices[i] = camera->Conversion(triangle.vertices[i]);
+	}
+
+	Novice::DrawTriangle(int(screenVertices[0].x), int(screenVertices[0].y), int(screenVertices[1].x), int(screenVertices[1].y), int(screenVertices[2].x), int(screenVertices[2].y),
+		color, kFillModeWireFrame);
+}
