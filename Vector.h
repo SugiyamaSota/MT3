@@ -27,6 +27,8 @@ Vector3 Project(const Vector3& v1, Vector3& v2);
 
 Vector3 ClosetPoint(const Vector3& point,Segment& segment);
 
+Vector3 Perpendicuar(const Vector3& vector);
+
 //===表示関数===//
 static const int kVectorColumnWidth = 60;
 

@@ -35,7 +35,7 @@
     <ClCompile Include="Camera.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Function.cpp">
+    <ClCompile Include="Collision.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -139,7 +139,7 @@
     <ClInclude Include="HeaderReader.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="Function.h">
+    <ClInclude Include="Collision.h">
       <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>

@@ -77,6 +77,13 @@ Vector3 ClosetPoint(const Vector3& point,  Segment& segment) {
 	return result;
 }
 
+Vector3 Perpendicuar(const Vector3& vector) {
+	if (vector.x != 0.0f || vector.y != 0.0f) {
+		return{ -vector.y,vector.x,0.0f };
+	}
+	return{ 0.0f,-vector.z,vector.y };
+}
+
 void  VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
 	Novice::ScreenPrintf(x + kVectorColumnWidth, y, "%.02f", vector.y);

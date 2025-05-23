@@ -1,4 +1,4 @@
-#include "Function.h"
+#include "Collision.h"
 #include"Struct.h"
 #include"Vector.h"
 #include<cmath>
@@ -22,9 +22,18 @@ bool isCollision(const Sphere& s, const Plane& p) {
 	}
 }
 
-Vector3 Perpendicuar(const Vector3& vector) {
-	if (vector.x != 0.0f || vector.y != 0.0f) {
-		return{ -vector.y,vector.x,0.0f };
+bool isCollision(const Segment& segment, const Plane& plane) {
+	float dot = Dot(plane.normal, segment.diff);
+
+	if (dot == 0.0f) {
+		return false;
 	}
-	return{ 0.0f,-vector.z,vector.y };
+
+	float t = (plane.distance - Dot(segment.origin, plane.normal)) / dot;
+
+	if (t >=0.0f,t<=1.0f) {
+		return true;
+	} else {
+		return false;
+	}
 }
