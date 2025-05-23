@@ -39,3 +39,8 @@ struct Plane {
 	Vector3 normal;
 	float distance;
 };
+
+//三角形
+struct Triangle {
+	Vector3 vertices[3];
+};

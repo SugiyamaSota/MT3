@@ -18,14 +18,32 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Camera* camera = new Camera();
 	camera->Initialize(kWindowWidth, kWindowHeight);
 
-	Plane plane = {
+	///// 変数の初期化
+	//平面
+	/*Plane plane = {
 		{0.0f,1.0f,0.0f},
 		0.5f,
-	};
+	};*/
 
+	//線分
 	Segment segment = {
 		{-1.0f,-1.0f,0.0f},
 		{2.0f,1.0f,1.5f},
+	};
+
+	//三角形
+	Vector3 triangleCenter = { 0.0f,0.0f,0.0f };
+	Triangle triangleDiff = {
+		{
+		{0.0f,0.5f,0.0f},
+		{0.5f,0.0f,0.0f},
+		{-0.5f,0.0f,0.0f},
+		}
+	};
+
+	Triangle triangle = {
+		{
+		}
 	};
 
 	int segmentColor = WHITE;
@@ -49,24 +67,32 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		///// ImGuiの処理 /////
 		ImGui::Begin("DebugWindow");
-		ImGui::SliderFloat("Plane Disntance", &plane.distance, -1.0f, 1.0f);
 		ImGui::SliderFloat3("Segment Diff", &segment.diff.x, 0.0f, 2.0f);
+		ImGui::SliderFloat3("Triangle Center", &triangleCenter.x, 0.0f, 2.0f);
 		ImGui::End();
 
 		///// カメラの更新 /////
 		camera->Update();
 
-		///// 線分の変換 /////
+		///// 座標の変換 /////
+		//線分
 		Vector3 segmentStart = camera->Conversion(segment.origin);
 		Vector3 segmentEnd = camera->Conversion(Add(segment.origin, segment.diff));
 
+		//三角形
+		for (int i = 0; i < 3; i++) {
+			triangle.vertices[i] = Add(triangleDiff.vertices[i], triangleCenter);
+		}
+
 		///// 衝突判定 /////
 		//線と平面
-		if (isCollision(segment, plane)) {
+		if (IsCollision(triangle,segment)) {
 			segmentColor = RED;
 		} else {
 			segmentColor = WHITE;
 		}
+
+		
 		///
 		/// ↑更新処理ここまで
 		///
@@ -79,10 +105,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawGrid(camera);
 
 		/////　平面の描画 /////
-		DrawPlane(plane, camera, WHITE);
+		//DrawPlane(plane, camera, WHITE);
 
 		///// 線の描画 /////
 		Novice::DrawLine(int(segmentStart.x), int(segmentStart.y), int(segmentEnd.x), int(segmentEnd.y), segmentColor);
+
+		//三角形の描画
+		DrawTriangle(triangle, camera, WHITE);
 		///
 		/// ↑描画処理ここまで
 		///
