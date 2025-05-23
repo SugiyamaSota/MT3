@@ -1,5 +1,4 @@
 ﻿#include"Draw.h"
-#include"Function.h"
 #include"Vector.h"
 
 void DrawGrid(Camera* camera) {

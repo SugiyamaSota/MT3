@@ -123,7 +123,7 @@ void Camera::Initialize(const int kWindowWidth, const int kWindowHeight) {
 }
 
 void Camera::Update() {
-	ImGui::Begin("Window");
+	ImGui::Begin("Camera");
 	ImGui::DragFloat3("CameraTranslate", &cameraTranslate_.x, 0.01f);
 	ImGui::DragFloat3("CameraRotate", &cameraRotate_.x, 0.01f);
 	ImGui::End();

@@ -1,11 +1,7 @@
 #include <Novice.h>
 #include<imgui.h>
-#include"Camera.h"
-#include"Draw.h"
-#include"Matrix.h"
-#include"Vector.h"
 #include"Struct.h"
-#include"Function.h"
+#include"HeaderReader.h"
 
 const char kWindowTitle[] = "LC1B_13_スギヤマソウタ_タイトル";
 
@@ -18,22 +14,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, kWindowWidth, kWindowHeight);
 
-	//カメラの生成と初期化
+	///// カメラの生成と初期化 /////
 	Camera* camera = new Camera();
 	camera->Initialize(kWindowWidth, kWindowHeight);
 
-	Sphere sphere = {
-		{0.0f,0.0f,0.0f},
-		1.0f,
-	};
-
 	Plane plane = {
 		{0.0f,1.0f,0.0f},
-		1.0f,
+		0.5f,
 	};
 
-	int sphereColor = BLACK;
-	int planeColor = BLACK;
+	Segment segment = {
+		{-1.0f,-1.0f,0.0f},
+		{2.0f,1.0f,1.5f},
+	};
+
+	int segmentColor = WHITE;
 
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
@@ -52,19 +47,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		//カメラの更新
-		camera->Update();
-		ImGui::Begin("sphere");
-		ImGui::DragFloat3("spherePosition", &sphere.center.x, 0.01f);
-		ImGui::DragFloat3("planeNormal", &plane.normal.x, 0.01f);
-		ImGui::DragFloat("planeDistance", &plane.distance, 0.01f);
+		///// ImGuiの処理 /////
+		ImGui::Begin("DebugWindow");
+		ImGui::SliderFloat("Plane Disntance", &plane.distance, -1.0f, 1.0f);
+		ImGui::SliderFloat3("Segment Diff", &segment.diff.x, 0.0f, 2.0f);
 		ImGui::End();
-		plane.normal = Normalize(plane.normal);
 
-		if (isCollision(sphere, plane) == true) {
-			sphereColor = RED;
+		///// カメラの更新 /////
+		camera->Update();
+
+		///// 線分の変換 /////
+		Vector3 segmentStart = camera->Conversion(segment.origin);
+		Vector3 segmentEnd = camera->Conversion(Add(segment.origin, segment.diff));
+
+		///// 衝突判定 /////
+		//線と平面
+		if (isCollision(segment, plane)) {
+			segmentColor = RED;
 		} else {
-			sphereColor = BLACK;
+			segmentColor = WHITE;
 		}
 		///
 		/// ↑更新処理ここまで
@@ -73,12 +74,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
-		
 
+		///// グリッドの描画 /////
 		DrawGrid(camera);
-		DrawSphere(sphere, camera, sphereColor);
-		DrawPlane(plane, camera, planeColor);
 
+		/////　平面の描画 /////
+		DrawPlane(plane, camera, WHITE);
+
+		///// 線の描画 /////
+		Novice::DrawLine(int(segmentStart.x), int(segmentStart.y), int(segmentEnd.x), int(segmentEnd.y), segmentColor);
 		///
 		/// ↑描画処理ここまで
 		///
