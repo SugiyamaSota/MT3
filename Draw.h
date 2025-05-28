@@ -1,9 +1,11 @@
 ﻿#pragma once
-#include<Novice.h>
-#include"Camera.h"
-#include"Struct.h"
-#define _USE_MATH_DEFINES
-#include<math.h>
+
+///// 前方宣言 /////
+class Camera;
+struct Sphere;
+struct Plane;
+struct Triangle;
+struct AABB;
 
 //グリッドの描画
 void DrawGrid(Camera* camera);
@@ -16,3 +18,6 @@ void DrawPlane(const Plane& plane, Camera* camera, int color);
 
 //三角形の描画
 void DrawTriangle(const Triangle& triangle, Camera* camera, int color);
+
+//AABBの描画
+void DrawAABB(const AABB& aabb, Camera* camera, int color);

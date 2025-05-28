@@ -1,6 +1,8 @@
 #include"Vector.h"
 #include<math.h>
 #include<Novice.h>
+#include"Struct.h"
+
 
 Vector3 Add(const Vector3& vector1, const Vector3& vector2) {
 	Vector3 result = {};
@@ -64,14 +66,13 @@ Vector3 Cross(const Vector3& vector1, const Vector3& vector2) {
 	return result;
 }
 
-
 Vector3 Project(const Vector3& v1, Vector3& v2) {
 	Vector3 result = {};
 	result = Multiply(Dot(v1, Normalize(v2)), Normalize(v2));
 	return result;
 }
 
-Vector3 ClosetPoint(const Vector3& point,  Segment& segment) {
+Vector3 ClosestPoint(const Vector3& point,  Segment& segment) {
 	Vector3 result = {};
 	result = Add(segment.origin, Project(Subtract(point, segment.origin), segment.diff));
 	return result;

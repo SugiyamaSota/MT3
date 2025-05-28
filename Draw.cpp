@@ -1,4 +1,9 @@
 ﻿#include"Draw.h"
+#include<Novice.h>
+#include"Camera.h"
+#include"Struct.h"
+#define _USE_MATH_DEFINES
+#include<math.h>
 #include"Vector.h"
 
 void DrawGrid(Camera* camera) {
@@ -103,7 +108,7 @@ void DrawPlane(const Plane& plane, Camera* camera, int color) {
 	perpendiculars[3] = { -perpendiculars[2].x, -perpendiculars[2].y, -perpendiculars[2].z };
 
 	Vector3 points[4];
-	for (int32_t index = 0; index < 4; ++index) {
+	for (int index = 0; index < 4; ++index) {
 		Vector3 extend = Multiply(2.0f, perpendiculars[index]);
 		Vector3 point = Add(center, extend);
 		points[index] = camera->Conversion(point);
@@ -122,4 +127,46 @@ void DrawTriangle(const Triangle& triangle, Camera* camera, int color) {
 
 	Novice::DrawTriangle(int(screenVertices[0].x), int(screenVertices[0].y), int(screenVertices[1].x), int(screenVertices[1].y), int(screenVertices[2].x), int(screenVertices[2].y),
 		color, kFillModeWireFrame);
+}
+
+void DrawAABB(const AABB& aabb, Camera* camera, int color) {
+	// AABBの8つの頂点を計算
+	Vector3 vertices[8];
+	vertices[0] = { aabb.min.x, aabb.min.y, aabb.min.z }; // P0 (min.x, min.y, min.z)
+	vertices[1] = { aabb.max.x, aabb.min.y, aabb.min.z }; // P1 (max.x, min.y, min.z)
+	vertices[2] = { aabb.min.x, aabb.max.y, aabb.min.z }; // P2 (min.x, max.y, min.z)
+	vertices[3] = { aabb.max.x, aabb.max.y, aabb.min.z }; // P3 (max.x, max.y, min.z)
+
+	vertices[4] = { aabb.min.x, aabb.min.y, aabb.max.z }; // P4 (min.x, min.y, max.z)
+	vertices[5] = { aabb.max.x, aabb.min.y, aabb.max.z }; // P5 (max.x, min.y, max.z)
+	vertices[6] = { aabb.min.x, aabb.max.y, aabb.max.z }; // P6 (min.x, max.y, max.z)
+	vertices[7] = { aabb.max.x, aabb.max.y, aabb.max.z }; // P7 (max.x, max.y, max.z)
+
+	// 各頂点をスクリーン座標に変換
+	Vector3 screenVertices[8];
+	for (int i = 0; i < 8; ++i) {
+		screenVertices[i] = camera->Conversion(vertices[i]);
+	}
+
+	// AABBの12本の辺を描画
+	// 各辺のインデックスペアを定義
+	const int indices[12][2] = {
+		{0, 1}, {0, 2}, {0, 4}, // min.z 面の3辺 (P0から伸びる辺)
+		{1, 3}, {1, 5},         // P1から伸びる辺
+		{2, 3}, {2, 6},         // P2から伸びる辺
+		{4, 5}, {4, 6},         // max.z 面の3辺 (P4から伸びる辺)
+		{3, 7},                 // P3から伸びる辺
+		{5, 7},                 // P5から伸びる辺
+		{6, 7}                  // P6から伸びる辺
+	};
+
+	for (int i = 0; i < 12; ++i) {
+		int idx1 = indices[i][0];
+		int idx2 = indices[i][1];
+		Novice::DrawLine(
+			static_cast<int>(screenVertices[idx1].x), static_cast<int>(screenVertices[idx1].y),
+			static_cast<int>(screenVertices[idx2].x), static_cast<int>(screenVertices[idx2].y),
+			color
+		);
+	}
 }
