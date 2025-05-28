@@ -5,6 +5,10 @@ struct Matrix4x4 {
 	float m[4][4];
 };
 
+struct Vector2 {
+	float x, y;
+};
+
 //三次元ベクトル
 struct Vector3 {
 	float x, y, z;
@@ -43,4 +47,10 @@ struct Plane {
 //三角形
 struct Triangle {
 	Vector3 vertices[3];
+};
+
+//AABB
+struct AABB {
+	Vector3 min;
+	Vector3 max;
 };

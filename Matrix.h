@@ -1,5 +1,6 @@
 ﻿#pragma once
-#include"Struct.h"
+///// 前方宣言 /////
+struct Matrix4x4;
 
 //===計算関数===//
 //行列の加法
@@ -20,7 +21,7 @@ Matrix4x4 Transpose(const Matrix4x4& matrix);
 //単位行列の作成
 Matrix4x4 MakeIdentity4x4();
 
-//===表示関数===//
+///// 描画関数 /////
 static const int kMatrixRowHeight = 20;
 static const int kMatrixColumnWidth = 60;
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label);

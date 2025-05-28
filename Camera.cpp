@@ -1,4 +1,9 @@
 #include "Camera.h"
+#include"struct.h"
+#include"imgui.h"
+#include<assert.h>
+#include<cmath>
+#include"Matrix.h"
 
 Matrix4x4 Camera::MakeTranslateMatrix(const Vector3& translate) {
 	Matrix4x4 result = MakeIdentity4x4();
