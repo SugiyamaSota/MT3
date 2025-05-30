@@ -2,6 +2,7 @@
 #include"Struct.h"
 #include"Vector.h"
 #include<cmath>
+#include<algorithm>
 
 bool IsCollision(const Sphere& s1, const Sphere& s2) {
 	float distance = Length(Subtract(s1.center, s2.center));
@@ -90,6 +91,19 @@ bool IsCollision(const AABB& aabb1, const AABB& aabb2) {
 	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
 		(aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) &&
 		(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool IsCollision(const AABB& aabb, const Sphere& s) {
+	Vector3 closestPoint{ std::clamp(s.center.x, aabb.min.x, aabb.max.x),
+		std::clamp(s.center.y, aabb.min.y, aabb.max.y),
+		std::clamp(s.center.z, aabb.min.z, aabb.max.z),
+	};
+	float distance = Length(Subtract(closestPoint, s.center));
+	if (distance <= s.radius) {
 		return true;
 	} else {
 		return false;
