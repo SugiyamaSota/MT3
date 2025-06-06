@@ -23,14 +23,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//AABB
 	AABB aabb{
 		.min{-0.5f,-0.5f,-0.5f},
-		.max{0.0f,0.0f,0.0f},
+		.max{0.5f,0.5f,0.5f},
 	};
 	int aabbColor = WHITE;
 
-	//球
-	Sphere sphere{
-		{0.5f,0.5f,0.5f},
-		1.0f,
+	//線分
+	Segment segment{
+		.origin{-0.7f,0.3f,0.0f},
+		.diff{2.0f,-0.5f,0.0f},
 	};
 
 	// キー入力結果を受け取る箱
@@ -68,9 +68,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		camera->Update();
 
 		///// 座標の変換 /////
+		Vector3 start = { segment.origin.x,segment.origin.y ,0 };
+		Vector3 end = { segment.diff.x - segment.origin.x, segment.diff.y - segment.origin.y,0 };
 
+		Vector3 screenStart = camera->Conversion(start);
+		Vector3 screenEnd = camera->Conversion(end);
 		///// 衝突判定 /////
-		if (IsCollision(aabb, sphere)) {
+		if (IsCollision(aabb, segment)) {
 			aabbColor = RED;
 		} else {
 			aabbColor = WHITE;
@@ -91,13 +95,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawAABB(aabb, camera, aabbColor);
 
 		///// 球の描画 /////
-		DrawSphere(sphere, camera, WHITE);
-		///
-		/// ↑描画処理ここまで
-		///
+		Novice::DrawLine(int(screenStart.x), int(screenStart.y), int(screenEnd.x), int(screenEnd.y), WHITE);
+			///
+			/// ↑描画処理ここまで
+			///
 
-		// フレームの終了
-		Novice::EndFrame();
+			// フレームの終了
+			Novice::EndFrame();
 
 		// ESCキーが押されたらループを抜ける
 		if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0) {
