@@ -109,3 +109,67 @@ bool IsCollision(const AABB& aabb, const Sphere& s) {
 		return false;
 	}
 }
+
+bool IsCollision(const AABB& aabb, const Segment& segment) {
+	Vector3 p1 = segment.origin;
+	
+	Vector3 p2 = Add(segment.origin, segment.diff);
+
+	float x_min_seg = std::min(p1.x, p2.x);
+	float x_max_seg = std::max(p1.x, p2.x);
+	float y_min_seg = std::min(p1.y, p2.y);
+	float y_max_seg = std::max(p1.y, p2.y);
+	float z_min_seg = std::min(p1.z, p2.z);
+	float z_max_seg = std::max(p1.z, p2.z);
+
+	if (x_max_seg < aabb.min.x || x_min_seg > aabb.max.x) return false;
+	if (y_max_seg < aabb.min.y || y_min_seg > aabb.max.y) return false;
+	if (z_max_seg < aabb.min.z || z_min_seg > aabb.max.z) return false;
+
+	Vector3 dir = segment.diff;
+
+	if (dir.x == 0 && dir.y == 0 && dir.z == 0) {
+		return (p1.x >= aabb.min.x && p1.x <= aabb.max.x &&
+			p1.y >= aabb.min.y && p1.y <= aabb.max.y &&
+			p1.z >= aabb.min.z && p1.z <= aabb.max.z);
+	}
+
+	float t_enter = 0.0f;
+	float t_exit = 1.0f;
+
+	if (dir.x != 0) {
+		float t1 = (aabb.min.x - p1.x) / dir.x;
+		float t2 = (aabb.max.x - p1.x) / dir.x;
+		if (t1 > t2) std::swap(t1, t2);
+		t_enter = std::max(t_enter, t1);
+		t_exit = std::min(t_exit, t2);
+	} else {
+		if (p1.x < aabb.min.x || p1.x > aabb.max.x) return false;
+	}
+
+	if (dir.y != 0) {
+		float t1 = (aabb.min.y - p1.y) / dir.y;
+		float t2 = (aabb.max.y - p1.y) / dir.y;
+		if (t1 > t2) std::swap(t1, t2);
+		t_enter = std::max(t_enter, t1);
+		t_exit = std::min(t_exit, t2);
+	} else {
+		if (p1.y < aabb.min.y || p1.y > aabb.max.y) return false; 
+	}
+
+	if (dir.z != 0) {
+		float t1 = (aabb.min.z - p1.z) / dir.z;
+		float t2 = (aabb.max.z - p1.z) / dir.z;
+		if (t1 > t2) std::swap(t1, t2);
+		t_enter = std::max(t_enter, t1);
+		t_exit = std::min(t_exit, t2);
+	} else {
+		if (p1.z < aabb.min.z || p1.z > aabb.max.z) return false;
+	}
+
+	if (t_enter > t_exit || t_exit < 0.0f || t_enter > 1.0f) {
+		return false;
+	}
+
+	return true;
+}

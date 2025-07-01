@@ -26,3 +26,6 @@ bool IsCollision(const AABB& aabb1, const AABB& aabb2);
 
 //AABBと球
 bool IsCollision(const AABB& aabb, const Sphere& s);
+
+//AABBと線分
+bool IsCollision(const AABB& aabb, const Segment& segment);
