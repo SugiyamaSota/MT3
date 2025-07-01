@@ -85,6 +85,14 @@ Vector3 Perpendicuar(const Vector3& vector) {
 	return{ 0.0f,-vector.z,vector.y };
 }
 
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
+	Vector3 result = {};
+	result.x = (v1.x * (1.0f - t)) + (v2.x * t);
+	result.y = (v1.y * (1.0f - t)) + (v2.y * t);
+	result.z = (v1.z * (1.0f - t)) + (v2.z * t);
+	return result;
+}
+
 void  VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
 	Novice::ScreenPrintf(x + kVectorColumnWidth, y, "%.02f", vector.y);

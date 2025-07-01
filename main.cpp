@@ -20,18 +20,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera->Initialize(kWindowWidth, kWindowHeight);
 
 	///// 変数の初期化 /////
-	//AABB
-	AABB aabb{
-		.min{-0.5f,-0.5f,-0.5f},
-		.max{0.5f,0.5f,0.5f},
+	Vector3 controlPoints[3] = {
+		{-0.8f,0.58f,1.0f},
+		{1.76f,1.0f,-0.3f},
+		{0.94f,0.7f,2.3f},
 	};
-	int aabbColor = WHITE;
 
-	//線分
-	Segment segment{
-		.origin{-0.7f,0.3f,0.0f},
-		.diff{2.0f,-0.5f,0.0f},
-	};
+	Sphere sphere[3];
+	for (int i = 0; i < 3; i++) {
+		sphere[i].center = controlPoints[i];
+		sphere[i].radius = 0.01f;
+	}
 
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
@@ -52,34 +51,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		///// ImGuiの処理 /////
 		ImGui::Begin("DebugWindow");
-		ImGui::SliderFloat3("aabb1.min", &aabb.min.x, -1.0f, 1.0f);
-		ImGui::SliderFloat3("aabb1.max", &aabb.max.x, -1.0f, 1.0f);
+		ImGui::DragFloat3("point1", &controlPoints[0].x);
+		ImGui::DragFloat3("point2", &controlPoints[1].x);
+		ImGui::DragFloat3("point3", &controlPoints[2].x);
 		ImGui::End();
 
-		//aabb の座標制御
-		aabb.min.x = (std::min)(aabb.min.x, aabb.max.x);
-		aabb.max.x = (std::max)(aabb.min.x, aabb.max.x);
-		aabb.min.y = (std::min)(aabb.min.y, aabb.max.y);
-		aabb.max.y = (std::max)(aabb.min.y, aabb.max.y);
-		aabb.min.z = (std::min)(aabb.min.z, aabb.max.z);
-		aabb.max.z = (std::max)(aabb.min.z, aabb.max.z);
 
 		///// カメラの更新 /////
 		camera->Update();
 
 		///// 座標の変換 /////
-		Vector3 start = { segment.origin.x,segment.origin.y ,0 };
-		Vector3 end = { segment.diff.x - segment.origin.x, segment.diff.y - segment.origin.y,0 };
-
-		Vector3 screenStart = camera->Conversion(start);
-		Vector3 screenEnd = camera->Conversion(end);
-		///// 衝突判定 /////
-		if (IsCollision(aabb, segment)) {
-			aabbColor = RED;
-		} else {
-			aabbColor = WHITE;
+		for (int i = 0; i < 3; i++) {
+			sphere[i].center = controlPoints[i];
 		}
-
+		///// 衝突判定 /////
 		///
 		/// ↑更新処理ここまで
 		///
@@ -91,14 +76,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///// グリッドの描画 /////
 		DrawGrid(camera);
 
-		///// AABBの描画 /////
-		DrawAABB(aabb, camera, aabbColor);
+		// Beziers曲線
+		DrawBezier(controlPoints[0], controlPoints[1], controlPoints[2], camera, WHITE);
 
-		///// 球の描画 /////
-		Novice::DrawLine(int(screenStart.x), int(screenStart.y), int(screenEnd.x), int(screenEnd.y), WHITE);
-			///
-			/// ↑描画処理ここまで
-			///
+		//点描画
+		for (int i = 0; i < 3; i++) {
+
+			DrawSphere(sphere[i], camera, BLACK);
+		}
+
+		///
+		/// ↑描画処理ここまで
+		///
 
 			// フレームの終了
 			Novice::EndFrame();

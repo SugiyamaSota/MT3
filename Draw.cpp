@@ -46,7 +46,7 @@ void DrawGrid(Camera* camera) {
 	}
 }
 
-void DrawSphere(const Sphere& sphere, Camera* camera, int color) {
+void DrawSphere(const Sphere& sphere, Camera* camera, uint32_t color) {
 	const int kSubdivision = 10;
 	const float kLonEvery = float(2 * M_PI / kSubdivision);
 	const float kLatEvery = float(M_PI / kSubdivision);
@@ -99,7 +99,7 @@ void DrawSphere(const Sphere& sphere, Camera* camera, int color) {
 	}
 }
 
-void DrawPlane(const Plane& plane, Camera* camera, int color) {
+void DrawPlane(const Plane& plane, Camera* camera, uint32_t color) {
 	Vector3 center = Multiply(plane.distance, plane.normal);
 	Vector3 perpendiculars[4];
 	perpendiculars[0] = Normalize(Perpendicuar(plane.normal));
@@ -119,7 +119,7 @@ void DrawPlane(const Plane& plane, Camera* camera, int color) {
 	Novice::DrawLine(int(points[3].x), int(points[3].y), int(points[0].x), int(points[0].y), color);
 }
 
-void DrawTriangle(const Triangle& triangle, Camera* camera, int color) {
+void DrawTriangle(const Triangle& triangle, Camera* camera, uint32_t color) {
 	Vector3 screenVertices[3];
 	for (int i = 0; i < 3; i++) {
 		screenVertices[i] = camera->Conversion(triangle.vertices[i]);
@@ -129,7 +129,7 @@ void DrawTriangle(const Triangle& triangle, Camera* camera, int color) {
 		color, kFillModeWireFrame);
 }
 
-void DrawAABB(const AABB& aabb, Camera* camera, int color) {
+void DrawAABB(const AABB& aabb, Camera* camera, uint32_t color) {
 	// AABBの8つの頂点を計算
 	Vector3 vertices[8];
 	vertices[0] = { aabb.min.x, aabb.min.y, aabb.min.z }; // P0 (min.x, min.y, min.z)
@@ -168,5 +168,37 @@ void DrawAABB(const AABB& aabb, Camera* camera, int color) {
 			static_cast<int>(screenVertices[idx2].x), static_cast<int>(screenVertices[idx2].y),
 			color
 		);
+	}
+}
+
+void DrawBezier(const Vector3& controlPosint0, const Vector3& controlPosint1, const Vector3& controlPosint2,
+	Camera* camera, uint32_t color) {
+
+	const int SEGMENTS = 32; // 曲線をどれくらいの数の線分で近似するか
+
+	// 最初の点もカメラ変換してスクリーン座標にする
+	Vector3 previousScreenPoint = camera->Conversion(controlPosint0);
+
+	for (int i = 1; i <= SEGMENTS; ++i) {
+		float t = static_cast<float>(i) / SEGMENTS;
+
+		// ステップ1: 制御点0と制御点1の間をtで補間した点 A を計算
+		Vector3 point_A = Lerp(controlPosint0, controlPosint1, t);
+
+		// ステップ2: 制御点1と制御点2の間をtで補間した点 B を計算
+		Vector3 point_B = Lerp(controlPosint1, controlPosint2, t);
+
+		// ステップ3: 点 A と点 B の間をtで補間した点がベジェ曲線上の点となる
+		Vector3 worldPoint = Lerp(point_A, point_B, t);
+
+		// ベジェ曲線上の点をカメラを使ってスクリーン座標に変換
+		Vector3 currentScreenPoint = camera->Conversion(worldPoint);
+
+		Novice::DrawLine(int(previousScreenPoint.x), int(previousScreenPoint.y), int(currentScreenPoint.x), int(currentScreenPoint.y), color);
+
+		// 次の線分のために現在の点を記憶
+		previousScreenPoint = currentScreenPoint;
+
+		
 	}
 }
