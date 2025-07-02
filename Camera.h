@@ -36,9 +36,6 @@ private:
 	// Y軸回転行列
 	Matrix4x4 MakeRotateZMatrix(float radian);
 
-	// 合成作成
-	Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
-
 	// 透視射影行列
 	Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
 
@@ -67,5 +64,12 @@ public:
 
 	//セッター
 
+	/// --- ヘルパー関数 ---
+	// 合成行列
+	Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+	// 変換行列
+	Vector3 MakeScreenPosition(const Matrix4x4& worldMatrix);
+	// なにもしない
+	void None() {};
 };
 

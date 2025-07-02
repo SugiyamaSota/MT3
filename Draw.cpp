@@ -51,6 +51,8 @@ void DrawSphere(const Sphere& sphere, Camera* camera, uint32_t color) {
 	const float kLonEvery = float(2 * M_PI / kSubdivision);
 	const float kLatEvery = float(M_PI / kSubdivision);
 
+	camera->None();
+
 	// 頂点数は (kSubdivision + 1) * (kSubdivision + 1)
 	const int vertexCount = (kSubdivision + 1) * (kSubdivision + 1);
 	Vector3 vertices[vertexCount] = {};
@@ -86,15 +88,10 @@ void DrawSphere(const Sphere& sphere, Camera* camera, uint32_t color) {
 			Vector3 v3 = vertices[nextLatIndex * (kSubdivision + 1) + nextLonIndex];
 
 
-			Vector3 screenA = camera->Conversion(v0);
-			Vector3 screenB = camera->Conversion(v1);
-			Vector3 screenC = camera->Conversion(v2);
-			Vector3 screenD = camera->Conversion(v3);
-
-			Novice::DrawLine(int(screenA.x), int(screenA.y), int(screenB.x), int(screenB.y), color);
-			Novice::DrawLine(int(screenA.x), int(screenA.y), int(screenC.x), int(screenC.y), color);
-			Novice::DrawLine(int(screenB.x), int(screenB.y), int(screenD.x), int(screenD.y), color);
-			Novice::DrawLine(int(screenC.x), int(screenC.y), int(screenD.x), int(screenD.y), color);
+			Novice::DrawLine(int(v0.x), int(v0.y), int(v1.x), int(v1.y), color);
+			Novice::DrawLine(int(v0.x), int(v0.y), int(v2.x), int(v2.y), color);
+			Novice::DrawLine(int(v1.x), int(v1.y), int(v3.x), int(v3.y), color);
+			Novice::DrawLine(int(v2.x), int(v2.y), int(v3.x), int(v3.y), color);
 		}
 	}
 }

@@ -139,3 +139,13 @@ void Camera::Update() {
 	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, viewProjectionMatrix_));
 	viewportMatrix_ = MakeViewportMatrix(0, 0, float(kWindowWidth_), float(kWindowHeight_), 0.0f, 1.0f);
 }
+
+Vector3 Camera::MakeScreenPosition(const Matrix4x4& worldMatrix) {
+	Matrix4x4 uniqueViewProjectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth_) / float(kWindowHeight_), 0.1f, 100.0f);
+	Matrix4x4 uniqueWorldViewProjectionMatrix_ = Multiply(worldMatrix, Multiply(viewMatrix_, uniqueViewProjectionMatrix));
+	Matrix4x4 uniqueViewportMatrix_ = MakeViewportMatrix(0, 0, float(kWindowWidth_), float(kWindowHeight_), 0.0f, 1.0f);
+	Vector3 worldPos = { worldMatrix.m[2][0],worldMatrix.m[2][1], worldMatrix.m[2][2] };
+	Vector3 ndc = Transform(worldPos, uniqueWorldViewProjectionMatrix_);
+	Vector3 screen = Transform(ndc, uniqueViewportMatrix_);
+	return screen;
+}
