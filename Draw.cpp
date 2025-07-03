@@ -79,20 +79,20 @@ void DrawSphere(const Sphere& sphere, Camera* camera, uint32_t color) {
 				nextLatIndex = kSubdivision;
 			}
 
-			Vector3 v0 = vertices[index];
-			Vector3 v1 = vertices[latIndex * (kSubdivision + 1) + nextLonIndex];
-			Vector3 v2 = vertices[nextLatIndex * (kSubdivision + 1) + lonIndex];
-			Vector3 v3 = vertices[nextLatIndex * (kSubdivision + 1) + nextLonIndex];
+			Vector3 v0_world = vertices[index];
+			Vector3 v1_world = vertices[latIndex * (kSubdivision + 1) + nextLonIndex];
+			Vector3 v2_world = vertices[nextLatIndex * (kSubdivision + 1) + lonIndex];
+			Vector3 v3_world = vertices[nextLatIndex * (kSubdivision + 1) + nextLonIndex];
 
-			camera->Conversion(v0);
-			camera->Conversion(v1);
-			camera->Conversion(v2);
-			camera->Conversion(v3);
+			Vector3 v0_screen = camera->Conversion(v0_world);
+			Vector3 v1_screen = camera->Conversion(v1_world);
+			Vector3 v2_screen = camera->Conversion(v2_world);
+			Vector3 v3_screen = camera->Conversion(v3_world);
 
-			Novice::DrawLine(int(v0.x), int(v0.y), int(v1.x), int(v1.y), color);
-			Novice::DrawLine(int(v0.x), int(v0.y), int(v2.x), int(v2.y), color);
-			Novice::DrawLine(int(v1.x), int(v1.y), int(v3.x), int(v3.y), color);
-			Novice::DrawLine(int(v2.x), int(v2.y), int(v3.x), int(v3.y), color);
+			Novice::DrawLine(int(v0_screen.x), int(v0_screen.y), int(v1_screen.x), int(v1_screen.y), color);
+			Novice::DrawLine(int(v0_screen.x), int(v0_screen.y), int(v2_screen.x), int(v2_screen.y), color);
+			Novice::DrawLine(int(v1_screen.x), int(v1_screen.y), int(v3_screen.x), int(v3_screen.y), color);
+			Novice::DrawLine(int(v2_screen.x), int(v2_screen.y), int(v3_screen.x), int(v3_screen.y), color);
 		}
 	}
 }

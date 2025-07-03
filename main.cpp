@@ -20,6 +20,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Camera* camera = new Camera();
 	camera->Initialize(kWindowWidth, kWindowHeight);
 
+	// 球
+	Sphere sphere = {
+		{0,0,0},
+		0.05f,
+	};
+
+	// 回転関連
+	float angularVelocity = 3.14f;
+	float angle = 0.0f;
+	float deltaTime = 1.0f / 60.0f;
+	float rotateRadius = 0.8f;
+
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
@@ -39,10 +51,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// ImGui
 		ImGui::Begin("Window");
+		if (ImGui::Button("Start")) {
+			// 開始処理
+			angle = 0.0f;
+		}
 		ImGui::End();
 
-		// カメラの更新
+		// カメラ
 		camera->Update();
+
+		// 回転
+		angle += angularVelocity * deltaTime;
+
+		// 球
+		sphere.center.x = std::cos(angle) * rotateRadius;
+		sphere.center.y = std::sin(angle) * rotateRadius;
 
 		///
 		/// ↑更新処理ここまで
@@ -54,6 +77,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// グリッド
 		DrawGrid(camera);
+
+		// 球
+		DrawSphere(sphere, camera, BLUE);
 
 		///
 		/// ↑描画処理ここまで
