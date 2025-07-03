@@ -15,24 +15,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, kWindowWidth, kWindowHeight);
 
-	///--- 生成と初期化 --- ///
+	///--- 生成と初期化 ---
 	// カメラ
 	Camera* camera = new Camera();
 	camera->Initialize(kWindowWidth, kWindowHeight);
 
-	// ベクトル
-	Vector3 a{ 0.2f,1.0f,0.0f };
-	Vector3 b{ 2.4f,3.1f,1.2f };
-	Vector3 c = a + b;
-	Vector3 d = a - b;
-	Vector3 e = a * 2.3f;
+	// ばね
+	Spring spring{};
+	spring.anchor = { 0.0f,0.0f,0.0f };
+	spring.natiralLength = 1.0f;
+	spring.stiffness = 100.0f;
+	spring.dampingCoefficient = 2.0f;
 
-	Vector3 rotate{ 0.4f,1.43f,-0.8f };
-	Matrix4x4 rotateXMatrix = camera->MakeRotateXMatrix(rotate.x);
-	Matrix4x4 rotateYMatrix = camera->MakeRotateYMatrix(rotate.y);
-	Matrix4x4 rotateZMatrix = camera->MakeRotateZMatrix(rotate.z);
+	// ボール
+	Ball ball{};
+	ball.position = { 1.2f,0.0f,0.0f };
+	ball.mass = 2.0f;
+	ball.radius = 10.0f;
+	ball.color = BLUE;
 
-	Matrix4x4 rotateMatrix = rotateXMatrix * rotateYMatrix * rotateZMatrix;
+	float deltaTime = 1.0f / 60.0f;
 
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
@@ -51,27 +53,39 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		///// ImGuiの処理 /////
+		// ImGui
 		ImGui::Begin("Window");
-
-		ImGui::Text("c:%f, %f, %f", c.x, c.y, c.z);
-		ImGui::Text("d:%f, %f, %f", d.x, d.y, d.z);
-		ImGui::Text("e:%f, %f, %f", e.x, e.y, e.z);
-		ImGui::Text(
-			"matrix:\n%f, %f, %f, %f\n%f, %f, %f, %f\n%f, %f, %f, %f\n%f, %f, %f, %f\n",
-			rotateMatrix.m[0][0], rotateMatrix.m[0][1], rotateMatrix.m[0][2],
-			rotateMatrix.m[0][3], rotateMatrix.m[1][0], rotateMatrix.m[1][1],
-			rotateMatrix.m[1][2], rotateMatrix.m[1][3], rotateMatrix.m[2][0],
-			rotateMatrix.m[2][1], rotateMatrix.m[2][2], rotateMatrix.m[2][3],
-			rotateMatrix.m[3][0], rotateMatrix.m[3][1], rotateMatrix.m[3][2],
-			rotateMatrix.m[3][3]);
+		if (ImGui::Button("Start")) {
+			ball.position = { 1.2f,0.0f,0.0f };
+		}
 		ImGui::End();
 
 
-		///// カメラの更新 /////
+		// カメラの更新
 		camera->Update();
 
-		
+		// ばねの計算
+		Vector3 diff = ball.position - spring.anchor;
+		float length = Length(diff);
+		if (length != 0.0f) {
+			Vector3 direction = Normalize(diff);
+			Vector3 restPosition = spring.anchor + direction * spring.natiralLength;
+			Vector3 displacement = (ball.position - restPosition) * length;
+			Vector3 restoringForce = displacement * (-spring.stiffness);
+			Vector3 dampingForce = ball.velocity * -spring.dampingCoefficient;
+			Vector3 force = restoringForce + dampingForce;
+			ball.acceleration = force / ball.mass;
+		}
+		// 加速度も速度もどちらも秒を基準とした値である
+		// それが、1/60秒間(deltaTime)適用されたと考える
+		ball.velocity += ball.acceleration * deltaTime;
+		ball.position += ball.velocity * deltaTime;
+
+		Vector3 scSpringAnchor = camera->Conversion(spring.anchor);
+		Vector3 scBallPos = camera->Conversion(ball.position);
+
+		Novice::ScreenPrintf(0, 0, "ballPos : %f,%f", ball.position.x, ball.position.y);
+
 		///
 		/// ↑更新処理ここまで
 		///
@@ -80,11 +94,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		///// グリッドの描画 /////
+		// グリッド
 		DrawGrid(camera);
 
-		// 球の描画
-	
+		// ばね
+		Novice::DrawLine(int(scSpringAnchor.x), int(scSpringAnchor.y), int(scBallPos.x), int(scBallPos.y), WHITE);
+
+		// 球
+		Novice::DrawEllipse(int(scBallPos.x), int(scBallPos.y), int(ball.radius), int(ball.radius), 0.0f, ball.color, kFillModeSolid);
+
 		///
 		/// ↑描画処理ここまで
 		///

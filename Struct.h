@@ -288,3 +288,20 @@ struct AABB {
 	Vector3 min;
 	Vector3 max;
 };
+
+// ばね
+struct Spring {
+    Vector3 anchor;
+    float natiralLength;
+    float stiffness;
+    float dampingCoefficient;
+};
+
+struct Ball {
+    Vector3 position;
+    Vector3 velocity;
+    Vector3 acceleration;
+    float mass;
+    float radius;
+    unsigned int color;
+};
