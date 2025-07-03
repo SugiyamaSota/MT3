@@ -14,11 +14,9 @@ private:
 	Vector3 cameraRotate_;
 
 	// 変換行列
-	Matrix4x4 worldMatrix_;
 	Matrix4x4 cameraMatrix_;
 	Matrix4x4 viewMatrix_;
-	Matrix4x4 viewProjectionMatrix_;
-	Matrix4x4 worldViewProjectionMatrix_;
+	Matrix4x4 projectionMatrix_;
 	Matrix4x4 viewportMatrix_;
 
 	// 平行移動行列
@@ -52,7 +50,7 @@ public:
 	void Update();
 
 	//ゲッター
-	Matrix4x4 GetViewProjectionMatrix() { return viewProjectionMatrix_; }
+	Matrix4x4 GetprojectionMatrix() { return projectionMatrix_; }
 	Matrix4x4 GetViewportMatrix() { return viewportMatrix_; }
 
 	//セッター
@@ -62,8 +60,6 @@ public:
 	Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 	// 変換行列
 	Vector3 MakeScreenPosition(const Matrix4x4& worldMatrix);
-	// なにもしない
-	void None() {};
 	// x軸回転行列
 	Matrix4x4 MakeRotateXMatrix(float radian);
 
