@@ -107,8 +107,13 @@ Matrix4x4 Camera::MakeViewportMatrix(float left, float top, float width, float h
 }
 
 Vector3 Camera::Conversion(const Vector3& v) {
-	Vector3 ndc = Transform(v, worldViewProjectionMatrix_);
+	Matrix4x4 viewProjectionMatrix = Multiply(viewMatrix_, viewProjectionMatrix_); // ビュープロジェクション行列
+
+	Vector3 ndc = Transform(v, viewProjectionMatrix);
+
+	// NDCからスクリーン座標へ変換
 	Vector3 screen = Transform(ndc, viewportMatrix_);
+
 	return screen;
 }
 
@@ -119,11 +124,9 @@ void Camera::Initialize(const int kWindowWidth, const int kWindowHeight) {
 	cameraTranslate_ = { 0.0f,1.9f,-6.49f };
 	cameraRotate_ = { 0.26f,0.0f,0.0f };
 
-	worldMatrix_ = MakeAffineMatrix({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f });
 	cameraMatrix_ = MakeAffineMatrix({ 1.0f,1.0f,1.0f }, cameraRotate_, cameraTranslate_);
 	viewMatrix_ = Inverse(cameraMatrix_);
-	viewProjectionMatrix_ = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth_) / float(kWindowHeight_), 0.1f, 100.0f);
-	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, viewProjectionMatrix_));
+	projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth_) / float(kWindowHeight_), 0.1f, 100.0f);
 	viewportMatrix_ = MakeViewportMatrix(0, 0, float(kWindowWidth_), float(kWindowHeight_), 0.0f, 1.0f);
 }
 
@@ -132,11 +135,9 @@ void Camera::Update() {
 	ImGui::DragFloat3("CameraTranslate", &cameraTranslate_.x, 0.01f);
 	ImGui::DragFloat3("CameraRotate", &cameraRotate_.x, 0.01f);
 	ImGui::End();
-	worldMatrix_ = MakeAffineMatrix({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f });
 	cameraMatrix_ = MakeAffineMatrix({ 1.0f,1.0f,1.0f }, cameraRotate_, cameraTranslate_);
 	viewMatrix_ = Inverse(cameraMatrix_);
-	viewProjectionMatrix_ = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth_) / float(kWindowHeight_), 0.1f, 100.0f);
-	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, viewProjectionMatrix_));
+	projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth_) / float(kWindowHeight_), 0.1f, 100.0f);
 	viewportMatrix_ = MakeViewportMatrix(0, 0, float(kWindowWidth_), float(kWindowHeight_), 0.0f, 1.0f);
 }
 

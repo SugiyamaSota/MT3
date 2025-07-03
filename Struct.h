@@ -305,3 +305,15 @@ struct Ball {
     float radius;
     unsigned int color;
 };
+
+struct Bezier {
+    Vector3 startPoint;
+    Vector3 anchorPoint;
+    Vector3 endPoint;
+};
+
+struct WorldTransform {
+    Vector3 scale;
+    Vector3 rotate;
+    Vector3 translate;
+};

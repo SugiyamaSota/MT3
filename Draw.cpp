@@ -51,9 +51,6 @@ void DrawSphere(const Sphere& sphere, Camera* camera, uint32_t color) {
 	const float kLonEvery = float(2 * M_PI / kSubdivision);
 	const float kLatEvery = float(M_PI / kSubdivision);
 
-	camera->None();
-
-	// 頂点数は (kSubdivision + 1) * (kSubdivision + 1)
 	const int vertexCount = (kSubdivision + 1) * (kSubdivision + 1);
 	Vector3 vertices[vertexCount] = {};
 	int vertexIndex = 0;
@@ -87,6 +84,10 @@ void DrawSphere(const Sphere& sphere, Camera* camera, uint32_t color) {
 			Vector3 v2 = vertices[nextLatIndex * (kSubdivision + 1) + lonIndex];
 			Vector3 v3 = vertices[nextLatIndex * (kSubdivision + 1) + nextLonIndex];
 
+			camera->Conversion(v0);
+			camera->Conversion(v1);
+			camera->Conversion(v2);
+			camera->Conversion(v3);
 
 			Novice::DrawLine(int(v0.x), int(v0.y), int(v1.x), int(v1.y), color);
 			Novice::DrawLine(int(v0.x), int(v0.y), int(v2.x), int(v2.y), color);
@@ -168,22 +169,21 @@ void DrawAABB(const AABB& aabb, Camera* camera, uint32_t color) {
 	}
 }
 
-void DrawBezier(const Vector3& controlPosint0, const Vector3& controlPosint1, const Vector3& controlPosint2,
-	Camera* camera, uint32_t color) {
+void DrawBezier(const Bezier& bezier, Camera* camera, uint32_t color) {
 
 	const int SEGMENTS = 32; // 曲線をどれくらいの数の線分で近似するか
 
 	// 最初の点もカメラ変換してスクリーン座標にする
-	Vector3 previousScreenPoint = camera->Conversion(controlPosint0);
+	Vector3 previousScreenPoint = camera->Conversion(bezier.startPoint);
 
 	for (int i = 1; i <= SEGMENTS; ++i) {
 		float t = static_cast<float>(i) / SEGMENTS;
 
 		// ステップ1: 制御点0と制御点1の間をtで補間した点 A を計算
-		Vector3 point_A = Lerp(controlPosint0, controlPosint1, t);
+		Vector3 point_A = Lerp(bezier.startPoint, bezier.anchorPoint, t);
 
 		// ステップ2: 制御点1と制御点2の間をtで補間した点 B を計算
-		Vector3 point_B = Lerp(controlPosint1, controlPosint2, t);
+		Vector3 point_B = Lerp(bezier.anchorPoint,bezier.endPoint, t);
 
 		// ステップ3: 点 A と点 B の間をtで補間した点がベジェ曲線上の点となる
 		Vector3 worldPoint = Lerp(point_A, point_B, t);
@@ -195,7 +195,5 @@ void DrawBezier(const Vector3& controlPosint0, const Vector3& controlPosint1, co
 
 		// 次の線分のために現在の点を記憶
 		previousScreenPoint = currentScreenPoint;
-
-		
 	}
 }
