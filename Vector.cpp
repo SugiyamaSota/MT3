@@ -99,3 +99,4 @@ void  VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label)
 	Novice::ScreenPrintf(x + kVectorColumnWidth * 2, y, "%.02f", vector.z);
 	Novice::ScreenPrintf(x + kVectorColumnWidth * 3, y, "%s", label);
 }
+

@@ -27,14 +27,7 @@ private:
 	// 拡縮行列
 	Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 
-	// x軸回転行列
-	Matrix4x4 MakeRotateXMatrix(float radian);
-
-	// Y軸回転行列
-	Matrix4x4 MakeRotateYMatrix(float radian);
-
-	// Y軸回転行列
-	Matrix4x4 MakeRotateZMatrix(float radian);
+	
 
 	// 透視射影行列
 	Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
@@ -71,5 +64,13 @@ public:
 	Vector3 MakeScreenPosition(const Matrix4x4& worldMatrix);
 	// なにもしない
 	void None() {};
+	// x軸回転行列
+	Matrix4x4 MakeRotateXMatrix(float radian);
+
+	// Y軸回転行列
+	Matrix4x4 MakeRotateYMatrix(float radian);
+
+	// Y軸回転行列
+	Matrix4x4 MakeRotateZMatrix(float radian);
 };
 
