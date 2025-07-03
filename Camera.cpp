@@ -107,11 +107,9 @@ Matrix4x4 Camera::MakeViewportMatrix(float left, float top, float width, float h
 }
 
 Vector3 Camera::Conversion(const Vector3& v) {
-	Matrix4x4 viewProjectionMatrix = Multiply(viewMatrix_, viewProjectionMatrix_); // ビュープロジェクション行列
-
+	Matrix4x4 viewProjectionMatrix = Multiply(viewMatrix_, projectionMatrix_); 
 	Vector3 ndc = Transform(v, viewProjectionMatrix);
 
-	// NDCからスクリーン座標へ変換
 	Vector3 screen = Transform(ndc, viewportMatrix_);
 
 	return screen;
