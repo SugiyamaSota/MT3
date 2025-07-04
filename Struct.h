@@ -317,3 +317,11 @@ struct WorldTransform {
     Vector3 rotate;
     Vector3 translate;
 };
+
+struct Pendulum {
+    Vector3 anchor;
+    float length;
+    float angle;
+    float angularVelocity;
+    float angularAcceleration;
+};

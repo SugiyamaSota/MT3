@@ -15,22 +15,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, kWindowWidth, kWindowHeight);
 
-	///--- 生成と初期化 ---
 	// カメラ
 	Camera* camera = new Camera();
 	camera->Initialize(kWindowWidth, kWindowHeight);
 
-	// 球
-	Sphere sphere = {
-		{0,0,0},
-		0.05f,
-	};
+	// 振り子
+	Pendulum pendulum;
+	pendulum.anchor = { 0.0f,1.0f,0.0f };
+	pendulum.length = 0.8f;
+	pendulum.angle = 0.7f;
+	pendulum.angularVelocity = 0.0f;
+	pendulum.angularAcceleration = 0.0f;
 
-	// 回転関連
-	float angularVelocity = 3.14f;
-	float angle = 0.0f;
+	// 紐
+	Segment segment;
+	segment.origin = pendulum.anchor;
+	segment.diff = {};
+
+	// 球
+	Sphere sphere;
+	sphere.center = {};
+	sphere.radius = 0.05f;
+
 	float deltaTime = 1.0f / 60.0f;
-	float rotateRadius = 0.8f;
 
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
@@ -53,19 +60,31 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("Window");
 		if (ImGui::Button("Start")) {
 			// 開始処理
-			angle = 0.0f;
+			pendulum.anchor = { 0.0f,1.0f,0.0f };
+			pendulum.length = 0.8f;
+			pendulum.angle = 0.7f;
+			pendulum.angularVelocity = 0.0f;
+			pendulum.angularAcceleration = 0.0f;
 		}
 		ImGui::End();
 
 		// カメラ
 		camera->Update();
 
-		// 回転
-		angle += angularVelocity * deltaTime;
-
+		// 振り子
+		pendulum.angularAcceleration =
+			-(9.8f / pendulum.length) * std::sin(pendulum.angle);
+		pendulum.angularVelocity += pendulum.angularAcceleration * deltaTime;
+		pendulum.angle += pendulum.angularVelocity * deltaTime;
+		
 		// 球
-		sphere.center.x = std::cos(angle) * rotateRadius;
-		sphere.center.y = std::sin(angle) * rotateRadius;
+		sphere.center.x = pendulum.anchor.x + std::sin(pendulum.angle) * pendulum.length;
+		sphere.center.y = pendulum.anchor.y - std::cos(pendulum.angle) * pendulum.length;
+		sphere.center.z = pendulum.anchor.z;
+
+		//紐
+		segment.origin = pendulum.anchor;
+		segment.diff = sphere.center-pendulum.anchor;
 
 		///
 		/// ↑更新処理ここまで
@@ -77,6 +96,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// グリッド
 		DrawGrid(camera);
+
+		// 紐
+		DrawSegment(segment, camera, WHITE);
 
 		// 球
 		DrawSphere(sphere, camera, BLUE);
