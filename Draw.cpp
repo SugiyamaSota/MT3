@@ -46,6 +46,13 @@ void DrawGrid(Camera* camera) {
 	}
 }
 
+void DrawSegment(const Segment& segment, Camera* camera, uint32_t color) {
+	Vector3 startPos = camera->Conversion(segment.origin);
+	Vector3 endPos = camera->Conversion(segment.origin + segment.diff);
+
+	Novice::DrawLine(int(startPos.x), int(startPos.y), int(endPos.x), int(endPos.y), color);
+}
+
 void DrawSphere(const Sphere& sphere, Camera* camera, uint32_t color) {
 	const int kSubdivision = 10;
 	const float kLonEvery = float(2 * M_PI / kSubdivision);
@@ -183,7 +190,7 @@ void DrawBezier(const Bezier& bezier, Camera* camera, uint32_t color) {
 		Vector3 point_A = Lerp(bezier.startPoint, bezier.anchorPoint, t);
 
 		// ステップ2: 制御点1と制御点2の間をtで補間した点 B を計算
-		Vector3 point_B = Lerp(bezier.anchorPoint,bezier.endPoint, t);
+		Vector3 point_B = Lerp(bezier.anchorPoint, bezier.endPoint, t);
 
 		// ステップ3: 点 A と点 B の間をtで補間した点がベジェ曲線上の点となる
 		Vector3 worldPoint = Lerp(point_A, point_B, t);

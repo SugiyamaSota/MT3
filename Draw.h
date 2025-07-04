@@ -9,6 +9,8 @@
 /// <param name="camera">カメラクラス</param>
 void DrawGrid(Camera* camera);
 
+void DrawSegment(const Segment& segment, Camera* camera, uint32_t color);
+
 /// <summary>
 /// 球体の描画
 /// </summary>
