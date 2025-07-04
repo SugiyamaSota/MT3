@@ -20,16 +20,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera->Initialize(kWindowWidth, kWindowHeight);
 
 	// 振り子
-	Pendulum pendulum;
-	pendulum.anchor = { 0.0f,1.0f,0.0f };
-	pendulum.length = 0.8f;
-	pendulum.angle = 0.7f;
-	pendulum.angularVelocity = 0.0f;
-	pendulum.angularAcceleration = 0.0f;
+	ConicalPendulum conicalPendulum;
+	conicalPendulum.anchor = { 0.0f,1.0f,0.0f };
+	conicalPendulum.length = 0.8f;
+	conicalPendulum.halfApexAngle = 0.7f;
+	conicalPendulum.angle = 0.0f;
+	conicalPendulum.angularVelocity = 0.0f;
 
 	// 紐
 	Segment segment;
-	segment.origin = pendulum.anchor;
+	segment.origin = conicalPendulum.anchor;
 	segment.diff = {};
 
 	// 球
@@ -60,11 +60,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("Window");
 		if (ImGui::Button("Start")) {
 			// 開始処理
-			pendulum.anchor = { 0.0f,1.0f,0.0f };
-			pendulum.length = 0.8f;
-			pendulum.angle = 0.7f;
-			pendulum.angularVelocity = 0.0f;
-			pendulum.angularAcceleration = 0.0f;
+			conicalPendulum.anchor = { 0.0f,1.0f,0.0f };
+			conicalPendulum.length = 0.8f;
+			conicalPendulum.halfApexAngle = 0.7f;
+			conicalPendulum.angle = 0.0f;
+			conicalPendulum.angularVelocity = 0.0f;
 		}
 		ImGui::End();
 
@@ -72,19 +72,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		camera->Update();
 
 		// 振り子
-		pendulum.angularAcceleration =
-			-(9.8f / pendulum.length) * std::sin(pendulum.angle);
-		pendulum.angularVelocity += pendulum.angularAcceleration * deltaTime;
-		pendulum.angle += pendulum.angularVelocity * deltaTime;
-		
+		conicalPendulum.angularVelocity = std::sqrt(9.8f / (conicalPendulum.length * std::cos(conicalPendulum.halfApexAngle)));
+		conicalPendulum.angle += conicalPendulum.angularVelocity * deltaTime;
+
 		// 球
-		sphere.center.x = pendulum.anchor.x + std::sin(pendulum.angle) * pendulum.length;
-		sphere.center.y = pendulum.anchor.y - std::cos(pendulum.angle) * pendulum.length;
-		sphere.center.z = pendulum.anchor.z;
+		float radius = std::sin(conicalPendulum.halfApexAngle) * conicalPendulum.length;
+		float height = std::cos(conicalPendulum.halfApexAngle) * conicalPendulum.length;
+		sphere.center.x = conicalPendulum.anchor.x + std::cos(conicalPendulum.angle) * radius;
+		sphere.center.y = conicalPendulum.anchor.y - height;
+		sphere.center.z = conicalPendulum.anchor.z - std::sin(conicalPendulum.angle) * radius;
 
 		//紐
-		segment.origin = pendulum.anchor;
-		segment.diff = sphere.center-pendulum.anchor;
+		segment.origin = conicalPendulum.anchor;
+		segment.diff = sphere.center - conicalPendulum.anchor;
 
 		///
 		/// ↑更新処理ここまで
