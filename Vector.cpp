@@ -93,6 +93,14 @@ Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
 	return result;
 }
 
+Vector3 Reflect(const Vector3& input, const Vector3& normal) {
+	Vector3 result = {};
+
+	result = Subtract(input, Multiply(2 * (Dot(input, normal)), normal));
+
+	return result;
+}
+
 void  VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
 	Novice::ScreenPrintf(x + kVectorColumnWidth, y, "%.02f", vector.y);

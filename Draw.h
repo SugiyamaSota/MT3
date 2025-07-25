@@ -9,6 +9,12 @@
 /// <param name="camera">カメラクラス</param>
 void DrawGrid(Camera* camera);
 
+/// <summary>
+/// 線分の描画
+/// </summary>
+/// <param name="segment">線分構造体</param>
+/// <param name="camera">カメラクラス</param>
+/// <param name="color">色</param>
 void DrawSegment(const Segment& segment, Camera* camera, uint32_t color);
 
 /// <summary>
@@ -45,3 +51,5 @@ void DrawAABB(const AABB& aabb, Camera* camera, uint32_t color);
 
 
 void DrawBezier(const Bezier& bezier,Camera* camera, uint32_t color);
+
+void DrawBall(const Ball& ball, Camera* camera, uint32_t color);

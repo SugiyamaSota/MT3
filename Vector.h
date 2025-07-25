@@ -43,6 +43,8 @@ Vector3 Perpendicuar(const Vector3& vector);
 /// <returns>補完された点</returns>
 Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 
+Vector3 Reflect(const Vector3& input, const Vector3& normal);
+
 //--- 描画関数 ---
 static const int kVectorColumnWidth = 60;
 
